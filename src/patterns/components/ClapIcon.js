@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { MediumClapContext } from '../store/MediumClapContext';
 import styles from '../index.css';
 
-const ClapIcon = ({ isClicked }) => {
+const ClapIcon = () => {
+  const { isClicked } = useContext(MediumClapContext)
   return (
     <span> 
       <svg 

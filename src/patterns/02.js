@@ -1,9 +1,10 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState, createContext } from "react";
 import { ClapCount, ClapIcon, CountTotal } from './components';
 import useClapAnimation from "./hooks/useClapAnimation";
 import styles from './index.css';
+import Provider from "./store/MediumClapContext";
 
-const MediumClap = () => {
+const MediumClap = ({ children }) => {
   const MAXIMUM_USER_CLAP = 50;
   const [count, setCount] = useState(0);
   const [total, setTotal] = useState(101010);
@@ -37,24 +38,31 @@ const MediumClap = () => {
     setIsClicked(true);
   }
 
+  const memoizedValue = useMemo(() => ({
+    count,
+    total,
+    isClicked,
+    setRef,
+  }), [count, total, isClicked, setRef]);
+
   return (
-    <button 
-      ref={setRef} 
-      data-refkey="clapRef" 
-      className={styles.clap} 
-      onClick={onClickCapHandler}
-    >
-      <ClapIcon isClicked={isClicked} />
-      <ClapCount 
-        count={count} 
-        setRef={setRef} 
-      />
-      <CountTotal 
-        total={total} 
-        setRef={setRef} 
-      />
-    </button>
+    <Provider value={memoizedValue}>
+      <button 
+        ref={setRef} 
+        data-refkey="clapRef" 
+        className={styles.clap} 
+        onClick={onClickCapHandler}
+      >
+        { children }
+      </button>
+    </Provider>
   );
 }
 
-export default MediumClap;
+export default () => (
+  <MediumClap>
+    <ClapIcon  />
+    <ClapCount />
+    <CountTotal />
+  </MediumClap>
+);
