@@ -1,16 +1,13 @@
 import React, { useCallback, useMemo, useState, createContext, useEffect, useRef } from "react";
 import { ClapCount, ClapIcon, CountTotal } from './components';
-import { useClapAnimation, useDOMRef, } from "./hooks/";
+import { useClapAnimation, useDOMRef, useClapState } from "./hooks/";
 import styles from './index.css';
 import Provider from "./store/MediumClapContext";
-import userStyle from './usage.css';
 
 const MediumClap = ({ children, onClap, className, style : userStyles }) => {
-  const MAXIMUM_USER_CLAP = 50;
-  const [count, setCount] = useState(0);
-  const [total, setTotal] = useState(101010);
+  const [{ count, total, isClicked}, updateClapState] = useClapState();
   const [{clapRef, clapCountRef, clapTotalRef}, setRef] = useDOMRef();
-  const [isClicked, setIsClicked] = useState(false);
+  
   const animationTimeline = useClapAnimation({
     clapEl: clapRef,
     countEl: clapCountRef,
@@ -32,17 +29,7 @@ const MediumClap = ({ children, onClap, className, style : userStyles }) => {
   
   const onClickCapHandler = () => {
     animationTimeline.replay();
-    setCount(prevState => {
-      if (prevState < MAXIMUM_USER_CLAP) {
-        const incCount = prevState + 1;
-        setTotal(prevState => prevState + 1);
-        
-        return incCount;
-      }
-      return prevState;
-    });
-
-    setIsClicked(true);
+    updateClapState();
   }
 
   const memoizedValue = useMemo(() => ({
