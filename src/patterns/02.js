@@ -1,10 +1,10 @@
-import React, { useCallback, useMemo, useState, createContext } from "react";
+import React, { useCallback, useMemo, useState, createContext, useEffect, useRef } from "react";
 import { ClapCount, ClapIcon, CountTotal } from './components';
 import useClapAnimation from "./hooks/useClapAnimation";
 import styles from './index.css';
 import Provider from "./store/MediumClapContext";
 
-const MediumClap = ({ children }) => {
+const MediumClap = ({ children, onClap }) => {
   const MAXIMUM_USER_CLAP = 50;
   const [count, setCount] = useState(0);
   const [total, setTotal] = useState(101010);
@@ -15,7 +15,19 @@ const MediumClap = ({ children }) => {
     countEl: clapCountRef,
     clapTotalEl: clapTotalRef,
   });
+  const componentFirstRender = useRef(true);
 
+  useEffect(() => {
+    if (!componentFirstRender.current) {
+      onClap && onClap({
+        count, 
+        total, 
+        isClicked,
+      });
+    }
+    componentFirstRender.current = false;
+  }, [count, total, isClicked]);
+  
   const setRef = useCallback((node) => {
     setRefState(prevState => ({
       ...prevState,
@@ -59,10 +71,23 @@ const MediumClap = ({ children }) => {
   );
 }
 
-export default () => (
-  <MediumClap>
-    <ClapIcon  />
-    <ClapCount />
-    <CountTotal />
-  </MediumClap>
-);
+export default () => {
+  const [count, setCount] = useState(0);
+
+  const onClapHandler = (state) => {
+    setCount(state.count);
+  }
+
+  return (
+    <div style={{flexDirection:'column'}}>
+      <MediumClap onClap={onClapHandler}>
+        <ClapIcon  />
+        <ClapCount />
+        <CountTotal />
+      </MediumClap>
+      <div className={styles.info}>
+        You clicked {count} times
+      </div>
+    </div>
+  );
+}
