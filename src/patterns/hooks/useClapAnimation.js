@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import mojs from 'mo-js';
 
 const useClapAnimation = ({
