@@ -3,8 +3,9 @@ import { ClapCount, ClapIcon, CountTotal } from './components';
 import useClapAnimation from "./hooks/useClapAnimation";
 import styles from './index.css';
 import Provider from "./store/MediumClapContext";
+import userStyle from './usage.css';
 
-const MediumClap = ({ children, onClap, style : userStyles }) => {
+const MediumClap = ({ children, onClap, className, style : userStyles }) => {
   const MAXIMUM_USER_CLAP = 50;
   const [count, setCount] = useState(0);
   const [total, setTotal] = useState(101010);
@@ -16,6 +17,7 @@ const MediumClap = ({ children, onClap, style : userStyles }) => {
     clapTotalEl: clapTotalRef,
   });
   const componentFirstRender = useRef(true);
+  const classNames = [styles.clap, className].join(' ').trim();
 
   useEffect(() => {
     if (!componentFirstRender.current) {
@@ -62,7 +64,7 @@ const MediumClap = ({ children, onClap, style : userStyles }) => {
       <button 
         ref={setRef} 
         data-refkey="clapRef" 
-        className={styles.clap} 
+        className={classNames} 
         onClick={onClickCapHandler}
         style={userStyles}
       >
@@ -82,9 +84,9 @@ export default () => {
   return (
     <div style={{flexDirection:'column'}}>
       <MediumClap onClap={onClapHandler}>
-        <ClapIcon />
-        <ClapCount />
-        <CountTotal />
+        <ClapIcon className={userStyle.icon}/>
+        <ClapCount className={userStyle.count}/>
+        <CountTotal className={userStyle.total}/>
       </MediumClap>
       <div className={styles.info}>
         You clicked {count} times
