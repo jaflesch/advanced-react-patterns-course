@@ -4,7 +4,7 @@ import useClapAnimation from "./hooks/useClapAnimation";
 import styles from './index.css';
 import Provider from "./store/MediumClapContext";
 
-const MediumClap = ({ children, onClap }) => {
+const MediumClap = ({ children, onClap, style : userStyles }) => {
   const MAXIMUM_USER_CLAP = 50;
   const [count, setCount] = useState(0);
   const [total, setTotal] = useState(101010);
@@ -64,6 +64,7 @@ const MediumClap = ({ children, onClap }) => {
         data-refkey="clapRef" 
         className={styles.clap} 
         onClick={onClickCapHandler}
+        style={userStyles}
       >
         { children }
       </button>
@@ -81,7 +82,7 @@ export default () => {
   return (
     <div style={{flexDirection:'column'}}>
       <MediumClap onClap={onClapHandler}>
-        <ClapIcon  />
+        <ClapIcon />
         <ClapCount />
         <CountTotal />
       </MediumClap>

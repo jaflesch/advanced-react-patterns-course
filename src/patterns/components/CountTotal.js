@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import { MediumClapContext } from '../store/MediumClapContext';
 import styles from '../index.css';
 
-const CountTotal = () => {
+const CountTotal = ({style : userStyle = {}}) => {
   const { total, setRef } = useContext(MediumClapContext);
 
   return (
@@ -10,6 +10,7 @@ const CountTotal = () => {
       ref={setRef} 
       data-refkey="clapTotalRef"
       className={styles.total}
+      style={userStyle}
     >
       { total }
     </span>
