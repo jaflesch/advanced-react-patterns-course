@@ -24,7 +24,25 @@ const useClapState = (initialState = {
     setIsClicked(true);
   }, []); 
 
-  return [{ count, total, isClicked }, updateState];
+  const counterProps = {
+    count,
+    "aria-valuemin": 0,
+    "aria-valuemax": MAXIMUM_USER_CLAP,
+    "aria-valuenow": count,
+  }
+
+  const iconProps = {
+    onClick: updateState,
+    "aria-pressed": isClicked,
+  }
+
+  return [{ 
+    count, 
+    total, 
+    isClicked, 
+    counterProps,
+    iconProps,
+  }, updateState];
 }
 
 export default useClapState;

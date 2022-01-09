@@ -10,7 +10,7 @@ import styles from './index.css';
 import Provider from "./store/MediumClapContext";
 
 const MediumClap = ({ children, onClap, className, style : userStyles }) => {
-  const [{ count, total, isClicked}, updateClapState] = useClapState();
+  const [{ count, total, isClicked, counterProps, iconProps}, updateClapState] = useClapState();
   const [{clapRef, clapCountRef, clapTotalRef}, setRef] = useDOMRef();
   const animationTimeline = useClapAnimation({
     clapEl: clapRef,
@@ -37,7 +37,7 @@ const MediumClap = ({ children, onClap, className, style : userStyles }) => {
         data-refkey="clapRef" 
         className={classNames} 
         onClick={() => {
-          onClap && onClap({ count, total, isClicked });
+          onClap && onClap({ count, total, isClicked, counterProps, iconProps });
           updateClapState();
         }}
         style={userStyles}
@@ -49,21 +49,21 @@ const MediumClap = ({ children, onClap, className, style : userStyles }) => {
 }
 
 export default () => {
-  const [count, setCount] = useState(0);
-
+  const [clapState, setClapState] = useState({ count: 0});
+  
   const onClapHandler = (state) => {
-    setCount(state.count);
+    setClapState(state);
   }
 
   return (
     <div style={{flexDirection:'column'}}>
       <MediumClap onClap={onClapHandler}>
-        <ClapIcon />
-        <ClapCount />
+        <ClapIcon { ...clapState.iconProps} />
+        <ClapCount { ...clapState.counterProps} />
         <CountTotal />
       </MediumClap>
       <div className={styles.info}>
-        You clicked {count} times
+        You clicked {clapState.counterProps ? clapState.counterProps.count : 0} times
       </div>
     </div>
   );
